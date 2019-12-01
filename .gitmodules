@@ -1,0 +1,3 @@
+[submodule "libs/SimplePacketComs"]
+	path = libs/SimplePacketComs
+	url = git@github.com:madhephaestus/SimplePacketComs.git
