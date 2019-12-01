@@ -1,3 +1,0 @@
-/home/kbisland/SimplePacketComsExample/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/kbisland/SimplePacketComsExample/cmake-build-debug/CMakeFiles/SimplePacketComsExample.dir
-/home/kbisland/SimplePacketComsExample/cmake-build-debug/CMakeFiles/edit_cache.dir

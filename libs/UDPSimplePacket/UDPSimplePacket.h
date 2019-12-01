@@ -4,9 +4,9 @@
 #include "stdint.h"
 #include "stdbool.h"
 #include "../SimplePacketComs/src/SimplePacketComs.h"
-#include <WiFi.h>
-#include <WiFiUdp.h>
-#include <device/UDPSimplePacketComs.hpp>
+//#include <WiFi.h>
+//#include <WiFiUdp.h>
+#include "../phy/UDPSimplePacketComs.h"
 class UDPSimplePacket: public SimplePacketComsAbstract {
 private:
     WiFiUDP * udp;
