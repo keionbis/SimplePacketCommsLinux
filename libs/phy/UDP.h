@@ -65,6 +65,9 @@ namespace udp_client_server
         int                 recv(char *msg, size_t max_size);
         int                 timed_recv(char *msg, size_t max_size, int max_wait_ms);
 
+        int                 send(char *msg, size_t max_size);
+        int                 timed_send(char *msg, size_t max_size, int max_wait_ms);
+
     private:
         int                 f_socket;
         int                 f_port;

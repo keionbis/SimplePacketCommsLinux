@@ -333,6 +333,73 @@ namespace udp_client_server
         errno = EAGAIN;
         return -1;
     }
+    /** \brief Wait on a message.
+ *
+ * This function waits until a message is received on this UDP server.
+ * There are no means to return from this function except by receiving
+ * a message. Remember that UDP does not have a connect state so whether
+ * another process quits does not change the status of this UDP server
+ * and thus it continues to wait forever.
+ *
+ * Note that you may change the type of socket by making it non-blocking
+ * (use the get_socket() to retrieve the socket identifier) in which
+ * case this function will not block if no message is available. Instead
+ * it returns immediately.
+ *
+ * \param[in] msg  The buffer where the message is saved.
+ * \param[in] max_size  The maximum size the message (i.e. size of the \p msg buffer.)
+ *
+ * \return The number of bytes read or -1 if an error occurs.
+ */
+    int udp_server::send(char *msg, size_t max_size)
+    {
+        return ::send(f_socket, msg, max_size, 0);
+    }
+
+/** \brief Wait for data to come in.
+ *
+ * This function waits for a given amount of time for data to come in. If
+ * no data comes in after max_wait_ms, the function returns with -1 and
+ * errno set to EAGAIN.
+ *
+ * The socket is expected to be a blocking socket (the default,) although
+ * it is possible to setup the socket as non-blocking if necessary for
+ * some other reason.
+ *
+ * This function blocks for a maximum amount of time as defined by
+ * max_wait_ms. It may return sooner with an error or a message.
+ *
+ * \param[in] msg  The buffer where the message will be saved.
+ * \param[in] max_size  The size of the \p msg buffer in bytes.
+ * \param[in] max_wait_ms  The maximum number of milliseconds to wait for a message.
+ *
+ * \return -1 if an error occurs or the function timed out, the number of bytes received otherwise.
+ */
+    int udp_server::timed_send(char *msg, size_t max_size, int max_wait_ms)
+    {
+        fd_set s;
+        FD_ZERO(&s);
+        FD_SET(f_socket, &s);
+        struct timeval timeout;
+        timeout.tv_sec = max_wait_ms / 1000;
+        timeout.tv_usec = (max_wait_ms % 1000) * 1000;
+        int retval = select(f_socket + 1, &s, &s, &s, &timeout);
+        if(retval == -1)
+        {
+            // select() set errno accordingly
+            return -1;
+        }
+        if(retval > 0)
+        {
+            // our socket has data
+            return ::send(f_socket, msg, max_size, 0);
+        }
+
+        // our socket has no data
+        errno = EAGAIN;
+        return -1;
+    }
+
 
 } // namespace udp_client_server
 
